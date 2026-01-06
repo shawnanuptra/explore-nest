@@ -9,8 +9,15 @@ type Cat {
   owner: String
 }
 
+input EditCatInput {
+  breed: String
+  name: String
+  owner: String
+}
+
 type Mutation {
-  deleteCat(id: Int!): Cat
+  deleteCat(id: Int!): Boolean!
+  editCat(id: Int!, input: EditCatInput!): Cat
   newCat(input: NewCatInput!): Cat!
 }
 

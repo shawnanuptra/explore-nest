@@ -1,7 +1,7 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Cat } from './cats.model';
 import { CatsService } from './cats.service';
-import { NewCatInput } from './cats.input';
+import { EditCatInput, NewCatInput } from './cats.input';
 
 @Resolver(() => Cat)
 export class CatsResolver {
@@ -27,8 +27,16 @@ export class CatsResolver {
     return this.catService.newCat(name, breed, owner);
   }
 
-  @Mutation(() => Cat, { nullable: true })
+  @Mutation(() => Boolean)
   async deleteCat(@Args('id', { type: () => Int }) id: number) {
     return this.catService.deleteCat(id);
+  }
+
+  @Mutation(() => Cat, { nullable: true })
+  async editCat(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('input') input: EditCatInput,
+  ) {
+    return this.catService.editCat(id, input);
   }
 }

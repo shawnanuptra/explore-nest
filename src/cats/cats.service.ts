@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Cat } from './cats.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { EditCatInput } from './cats.input';
 
 @Injectable()
 export class CatsService {
@@ -27,12 +28,21 @@ export class CatsService {
   }
 
   newCat(name: string, breed: string, owner?: string): Promise<Cat> {
-    console.log(name, breed, owner);
     return this.catModel.create({
       name,
       breed,
       owner,
     });
+  }
+
+  async editCat(id: number, input: EditCatInput): Promise<Cat | null> {
+    const [affectedCount] = await this.catModel.update(input, {
+      where: { id },
+    });
+
+    if (affectedCount === 0) return null;
+
+    return this.catModel.findByPk(id);
   }
 
   async deleteCat(id: number): Promise<boolean> {
@@ -41,6 +51,7 @@ export class CatsService {
         id,
       },
     });
+
     return rows > 0;
   }
 }

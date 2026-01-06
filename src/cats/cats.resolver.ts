@@ -40,4 +40,9 @@ export class CatsResolver {
     const { name, breed, owner } = input;
     return this.catService.newCat(name, breed, owner);
   }
+
+  @Mutation(() => Cat, { nullable: true })
+  deleteCat(@Args('id', { type: () => Int }) id: number) {
+    return this.catService.deleteCat(id);
+  }
 }

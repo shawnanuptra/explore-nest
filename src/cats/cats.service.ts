@@ -39,4 +39,15 @@ export class CatsService {
     this.cats.push(newCat);
     return newCat;
   }
+
+  deleteCat(id: number): Cat | null {
+    const deletedCat = this.cats.find((cat) => cat.id === id);
+
+    if (deletedCat) {
+      this.cats = this.cats.filter((cat) => cat.id !== id);
+      return deletedCat;
+    }
+
+    return null;
+  }
 }

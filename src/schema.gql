@@ -10,6 +10,7 @@ type Cat {
 }
 
 type Mutation {
+  deleteCat(id: Int!): Cat
   newCat(input: NewCatInput!): Cat!
 }
 

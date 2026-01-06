@@ -21,6 +21,6 @@ input NewCatInput {
 }
 
 type Query {
+  cat(id: Int!): Cat
   cats: [Cat!]!
-  getCat(id: Int, name: String): [Cat!]!
 }

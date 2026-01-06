@@ -1,53 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { Cat } from './cats.model';
+import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class CatsService {
-  // in memory example
-  private cats: Cat[] = [
-    {
-      id: 1,
-      breed: 'Scottish Fold',
-      name: 'Spongebob',
-      owner: 'Shawn',
-    },
-  ];
+  constructor(@InjectModel(Cat) private catModel: typeof Cat) {}
 
   // methods
-  getAll(): Cat[] {
-    return this.cats;
+  getAll(): Promise<Cat[]> {
+    return this.catModel.findAll();
   }
 
-  getById(id: number): Cat[] {
-    const cat = this.cats.find((cat) => cat.id === id);
-    return cat ? [cat] : [];
+  getById(id: number): Promise<Cat | null> {
+    return this.catModel.findByPk(id);
   }
 
-  getByName(name: string): Cat[] {
-    console.log(this.cats.filter((cat) => cat.name.includes(name)) ?? []);
-    return this.cats.filter((cat) => cat.name.includes(name)) ?? [];
+  getByName(name: string): Promise<Cat[] | null> {
+    return this.catModel.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${name}%`,
+        },
+      },
+    });
   }
 
-  newCat(name: string, breed: string, owner?: string): Cat {
-    const newCat: Cat = {
-      id: this.cats.length + 1,
+  newCat(name: string, breed: string, owner?: string): Promise<Cat> {
+    console.log(name, breed, owner);
+    return this.catModel.create({
       name,
       breed,
       owner,
-    };
-
-    this.cats.push(newCat);
-    return newCat;
+    });
   }
 
-  deleteCat(id: number): Cat | null {
-    const deletedCat = this.cats.find((cat) => cat.id === id);
-
-    if (deletedCat) {
-      this.cats = this.cats.filter((cat) => cat.id !== id);
-      return deletedCat;
-    }
-
-    return null;
+  async deleteCat(id: number): Promise<boolean> {
+    const rows = await this.catModel.destroy({
+      where: {
+        id,
+      },
+    });
+    return rows > 0;
   }
 }

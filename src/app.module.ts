@@ -5,9 +5,17 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { CatsModule } from './cats/cats.module';
+import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({
   imports: [
+    SequelizeModule.forRoot({
+      dialect: 'sqlite',
+      storage: 'database.sqlite', // this file will be created automatically
+      autoLoadModels: true,
+      synchronize: true, // dev only
+      logging: false,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'), // where the automated schema file is generated. set to (true) to store in memory

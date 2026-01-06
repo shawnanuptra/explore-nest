@@ -8,41 +8,27 @@ export class CatsResolver {
   // DI to get the service
   constructor(private catService: CatsService) {}
 
-  // Resolve Query with @Query
   @Query(() => [Cat])
-  cats() {
+  // cats(@Args('name', { nullable: true }) name?: string) {
+  async cats() {
     return this.catService.getAll();
+    // return name ? this.catService.getByName(name) : this.catService.getAll();
   }
 
-  // Resolve Query with @Query
-  @Query(() => [Cat])
-  getCat(
-    @Args('name', { nullable: true }) name?: string,
-    @Args('id', { type: () => Int, nullable: true }) id?: number,
-  ) {
-    if (id !== undefined) {
-      // search and return the id
-      return this.catService.getById(id);
-    }
-
-    if (name !== undefined) {
-      // search and return all cats with same name
-      console.log(name);
-      return this.catService.getByName(name);
-    }
-
-    return this.catService.getAll();
+  @Query(() => Cat, { nullable: true })
+  async cat(@Args('id', { type: () => Int }) id: number) {
+    return this.catService.getById(id);
   }
 
   // Mutation with @Mutation
   @Mutation(() => Cat)
-  newCat(@Args('input') input: NewCatInput) {
+  async newCat(@Args('input') input: NewCatInput) {
     const { name, breed, owner } = input;
     return this.catService.newCat(name, breed, owner);
   }
 
   @Mutation(() => Cat, { nullable: true })
-  deleteCat(@Args('id', { type: () => Int }) id: number) {
+  async deleteCat(@Args('id', { type: () => Int }) id: number) {
     return this.catService.deleteCat(id);
   }
 }

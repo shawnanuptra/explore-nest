@@ -1,6 +1,7 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Cat } from './cats.model';
 import { CatsService } from './cats.service';
+import { NewCatInput } from './cats.input';
 
 @Resolver(() => Cat)
 export class CatsResolver {
@@ -31,5 +32,12 @@ export class CatsResolver {
     }
 
     return this.catService.getAll();
+  }
+
+  // Mutation with @Mutation
+  @Mutation(() => Cat)
+  newCat(@Args('input') input: NewCatInput) {
+    const { name, breed, owner } = input;
+    return this.catService.newCat(name, breed, owner);
   }
 }

@@ -9,6 +9,16 @@ type Cat {
   owner: String
 }
 
+type Mutation {
+  newCat(input: NewCatInput!): Cat!
+}
+
+input NewCatInput {
+  breed: String!
+  name: String!
+  owner: String
+}
+
 type Query {
   cats: [Cat!]!
   getCat(id: Int, name: String): [Cat!]!

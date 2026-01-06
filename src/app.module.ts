@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { CatsModule } from './cats/cats.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { join } from 'path';
       sortSchema: true, // sorts schema based on lexicon (alphabetically). defaults to order of modules included
       graphiql: true,
     }),
+    CatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

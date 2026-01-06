@@ -1,0 +1,15 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Cat {
+  breed: String!
+  id: Int!
+  name: String!
+  owner: String
+}
+
+type Query {
+  cats: [Cat!]!
+  getCat(id: Int, name: String): [Cat!]!
+}
